@@ -1,9 +1,8 @@
 <!doctype html>
-
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Happy Birthday, Fatemeh</title>
   <style>
     :root{--bg:#071022;--card:#081029;--accent:#7c3aed;--muted:#9fb0d6;--glass:rgba(255,255,255,.04)}
@@ -28,43 +27,57 @@
   <div class="wrap">
     <div class="card" id="card">
       <h1>Hello 👋</h1>
-      <p>This is your birthday surprise prepared by Arshia. Just type your first-name and open it.</p><div id="step1">
-  <div id="step1">
-    <div class="form">
-      <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
-      <button id="openBtn" type="button">Open</button>
+      <p>This is your birthday surprise prepared by Arshia. Just type your first-name and open it.</p>
+
+      <div id="step1">
+        <div class="form">
+          <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
+          <button id="openBtn" type="button">Open</button>
+        </div>
+        <div id="err" class="error hidden">This page is not for you.</div>
+      </div>
+
+      <div id="step2" class="hidden">
+        <div class="message" id="messageBlock"></div>
+        <div class="center">
+          <button id="blowBtn">Blow out the candles</button>
+        </div>
+        <div class="cake" id="cakeBlock"></div>
+      </div>
+
+      <div id="final" class="hidden">
+        <h1 id="finalTitle"></h1>
+        <p id="finalText"></p>
+        <div class="cake" id="smallCake"></div>
+      </div>
+
     </div>
-    <div id="err" class="error hidden">This page is not for you.</div>
   </div>
 
-  <div id="step2" class="hidden">
-    <div class="message" id="messageBlock"></div>
-    <div class="center">
-      <button id="blowBtn">Blow out the candles</button>
-    </div>
-    <div class="cake" id="cakeBlock"></div>
-  </div>
+  <script>
+    const MESSAGE = `Dear Fatemeh,
 
-  <div id="final" class="hidden">
-    <h1 id="finalTitle"></h1>
-    <p id="finalText"></p>
-    <div class="cake" id="smallCake"></div>
-  </div>
+Wishing you a relaxed and joyful birthday. I hope the year ahead brings you good moments, new experiences, and people who make you smile. Enjoy your day!
 
-</div>
-
-  </div>  <script>
-    const MESSAGE = `Dear Fatemeh,\n\nWishing you a relaxed and joyful birthday. I hope the year ahead brings you good moments, new experiences, and people who make you smile. Enjoy your day!\n\n— Arshia`;
-    const SMALL_CAKE = `   , , ,\n  (\\|/)\n   -*-\n  (\\|/)\n   | |  ==  HAPPY BIRTHDAY ==\n  (___)`;
-    const ASCII_CAKE = `       (\` + "'" + `)\n      ( : )\n     (  :  )\n    (\` + "'" + `-:--:-'\`)\n      |     |\n      |     |\n     (_______)`;
-
-    function q(id){return document.getElementById(id)}
-    function normalize(s){return String(s||'').trim().toLowerCase()}
+— Arshia`;
+    const SMALL_CAKE = `   , , ,
+  (\\|/)
+   -*-
+  (\\|/)
+   | |  ==  HAPPY BIRTHDAY ==
+  (___)`;
+    const ASCII_CAKE = `       (') 
+      ( : )
+     (  :  )
+    ('-:--:-')
+      |     |
+      |     |
+     (_______)`;
 
     function q(id){ return document.getElementById(id) }
     function normalize(s){ return String(s||'').trim().toLowerCase() }
-  
-    document.getElementById('openBtn').addEventListener('click', function (e) {
+
+    document.getElementById('openBtn').addEventListener('click', function () {
       const name = q('nameInput').value;
       if (normalize(name) !== 'fatemeh') {
         q('err').classList.remove('hidden');
@@ -78,22 +91,23 @@
     });
 
     q('blowBtn').addEventListener('click', ()=>{
-      q('step2').classList.add('hidden')
-      q('final').classList.remove('hidden')
-      q('finalTitle').textContent = 'Happy Birthday, Fatemeh 🎉'
-      q('finalText').textContent = 'Hope your day is relaxed, fun, and full of small lovely moments. Best wishes from Arshia 🤍.'
-      q('smallCake').textContent = SMALL_CAKE
-      const confetti = document.createElement('div')
-      confetti.textContent = '✨' + '✨'.repeat(3)
-      confetti.className = 'sparkle'
-      q('card').appendChild(confetti)
-      setTimeout(()=>confetti.remove(),4000)
-    })
+      q('step2').classList.add('hidden');
+      q('final').classList.remove('hidden');
+      q('finalTitle').textContent = 'Happy Birthday, Fatemeh 🎉';
+      q('finalText').textContent = 'Hope your day is relaxed, fun, and full of small lovely moments. Best wishes from Arshia 🤍.';
+      q('smallCake').textContent = SMALL_CAKE;
+      const confetti = document.createElement('div');
+      confetti.textContent = '✨' + '✨'.repeat(3);
+      confetti.className = 'sparkle';
+      q('card').appendChild(confetti);
+      setTimeout(()=>confetti.remove(),4000);
+    });
 
-    ;(function(){
-      const params = new URLSearchParams(location.search)
-      const pre = params.get('name')
-      if(pre){q('nameInput').value = pre}
-    })()
-  </script></body>
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const pre = params.get('name');
+      if(pre){ q('nameInput').value = pre; }
+    })();
+  </script>
+</body>
 </html>
