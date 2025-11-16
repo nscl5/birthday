@@ -5,49 +5,57 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Happy Birthday, Fatemeh</title>
   <style>
-    :root{--bg:#071022;--card:#081029;--accent:#7c3aed;--muted:#9fb0d6;--glass:rgba(255,255,255,.04)}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;color:#eaf6ff;background:linear-gradient(180deg,var(--bg),#031024);-webkit-font-smoothing:antialiased}
+    :root{--bg1:#fff7f3;--bg2:#fff6ff;--card:#ffffff;--accent:#ff6fb5;--accent2:#ffcc4d;--muted:#6b6b6b}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;color:#111;background:linear-gradient(180deg,var(--bg1),var(--bg2));-webkit-font-smoothing:antialiased}
     .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px}
-    .card{width:100%;max-width:820px;background:linear-gradient(180deg,var(--card),#041123);border-radius:14px;padding:26px;box-shadow:0 14px 40px rgba(2,6,23,.6)}
-    h1{margin:0;font-size:20px}
-    p{margin:10px 0 18px;color:var(--muted);line-height:1.45}
-    .form{display:flex;gap:8px;align-items:center}
-    input[type=text]{flex:1;padding:12px;border-radius:10px;border:1px solid var(--glass);background:rgba(255,255,255,.02);color:inherit}
-    button{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer}
-    .error{color:#ff9aa2;margin-top:10px}
-    .message{white-space:pre-wrap;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(90deg,#061726,#071022);padding:16px;border-radius:10px;margin-top:14px}
-    .cake{font-family:monospace;white-space:pre;margin-top:12px}
-    .center{display:flex;gap:8px;align-items:center}
+    .card{width:100%;max-width:820px;background:var(--card);border-radius:16px;padding:28px;box-shadow:0 18px 40px rgba(15,20,30,.08);border:1px solid rgba(0,0,0,.03)}
+    .intro{display:flex;gap:18px;align-items:flex-start}
+    h1{margin:0;font-size:24px;color:#111}
+    p{margin:6px 0 14px;color:var(--muted);line-height:1.5}
+    .form{display:flex;gap:10px;align-items:center;margin-top:8px}
+    input[type=text]{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,.06);background:linear-gradient(180deg,#fff,#fff);color:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+    button{padding:10px 14px;border-radius:12px;border:0;background:linear-gradient(90deg,var(--accent),#b86ce0);color:white;cursor:pointer;font-weight:600}
+    .error{color:#d23a4a;margin-top:10px}
+    .message{white-space:pre-wrap;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(90deg,#fff6fb,#fffef7);padding:18px;border-radius:12px;margin-top:16px;border:1px solid rgba(0,0,0,.03);color:#222}
+    .cake{font-size:36px;text-align:center;margin-top:18px;line-height:1.1}
+    .center{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:12px}
     .hidden{display:none}
-    .sparkle{display:inline-block;animation:pop 900ms linear infinite}
-    @keyframes pop{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+    .finalTitle{font-size:22px;margin:0}
+    .finalText{color:var(--muted);margin-top:8px}
+    .confetti-piece{position:fixed;pointer-events:none;z-index:9999;top:-10px;opacity:0.95}
+    @keyframes fall {to{transform:translateY(110vh) rotate(360deg)}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card" id="card">
-      <h1>Hello 👋</h1>
-      <p>This is your birthday surprise prepared by Arshia. Just type your first-name and open it.</p>
-
-      <div id="step1">
-        <div class="form">
-          <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
-          <button id="openBtn" type="button">Open</button>
+      <div id="intro">
+        <div class="intro">
+          <div>
+            <h1>Hello 👋</h1>
+            <p>This is a small birthday surprise prepared by Arshia. Just type your first-name and open it.</p>
+            <div id="step1">
+              <div class="form">
+                <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
+                <button id="openBtn" type="button">Open</button>
+              </div>
+              <div id="err" class="error hidden">This page is not for you.</div>
+            </div>
+          </div>
         </div>
-        <div id="err" class="error hidden">This page is not for you.</div>
       </div>
 
       <div id="step2" class="hidden">
         <div class="message" id="messageBlock"></div>
         <div class="center">
-          <button id="blowBtn">Blow out the candles</button>
+          <button id="blowBtn" type="button">Blow out the candles</button>
         </div>
         <div class="cake" id="cakeBlock"></div>
       </div>
 
       <div id="final" class="hidden">
-        <h1 id="finalTitle"></h1>
-        <p id="finalText"></p>
+        <h2 class="finalTitle" id="finalTitle"></h2>
+        <p class="finalText" id="finalText"></p>
         <div class="cake" id="smallCake"></div>
       </div>
 
@@ -60,20 +68,7 @@
 Wishing you a relaxed and joyful birthday. I hope the year ahead brings you good moments, new experiences, and people who make you smile. Enjoy your day!
 
 — Arshia`;
-    const SMALL_CAKE = `   , , ,
-  (\\|/)
-   -*-
-  (\\|/)
-   | |  ==  HAPPY BIRTHDAY ==
-  (___)`;
-    const ASCII_CAKE = `       (') 
-      ( : )
-     (  :  )
-    ('-:--:-')
-      |     |
-      |     |
-     (_______)`;
-
+    const CAKE_EMOJI = `🎂\n🕯️🕯️🕯️`;
     function q(id){ return document.getElementById(id) }
     function normalize(s){ return String(s||'').trim().toLowerCase() }
 
@@ -84,10 +79,10 @@ Wishing you a relaxed and joyful birthday. I hope the year ahead brings you good
         return;
       }
       q('err').classList.add('hidden');
-      q('step1').classList.add('hidden');
+      q('intro').classList.add('hidden');
       q('step2').classList.remove('hidden');
       q('messageBlock').textContent = MESSAGE;
-      q('cakeBlock').textContent = ASCII_CAKE;
+      q('cakeBlock').textContent = CAKE_EMOJI;
     });
 
     q('blowBtn').addEventListener('click', ()=>{
@@ -95,19 +90,36 @@ Wishing you a relaxed and joyful birthday. I hope the year ahead brings you good
       q('final').classList.remove('hidden');
       q('finalTitle').textContent = 'Happy Birthday, Fatemeh 🎉';
       q('finalText').textContent = 'Hope your day is relaxed, fun, and full of small lovely moments. Best wishes from Arshia 🤍.';
-      q('smallCake').textContent = SMALL_CAKE;
-      const confetti = document.createElement('div');
-      confetti.textContent = '✨' + '✨'.repeat(3);
-      confetti.className = 'sparkle';
-      q('card').appendChild(confetti);
-      setTimeout(()=>confetti.remove(),4000);
+      q('smallCake').textContent = '🎂🎁🧁';
+      launchConfetti();
     });
 
     (function(){
       const params = new URLSearchParams(location.search);
       const pre = params.get('name');
-      if(pre){ q('nameInput').value = pre; }
+      if(pre){
+        q('nameInput').value = pre;
+      }
     })();
+
+    function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function launchConfetti(){
+      const colors = ['#FF6FB5','#FFD66B','#7CE3B6','#9AD2FF','#C89BFF']
+      for(let i=0;i<40;i++){
+        const el=document.createElement('div')
+        el.className='confetti-piece'
+        el.style.left=rand(5,95)+'vw'
+        el.style.background=colors[rand(0,colors.length-1)]
+        el.style.width=rand(6,12)+'px'
+        el.style.height=rand(10,18)+'px'
+        el.style.borderRadius=rand(0,50)+'%'
+        el.style.transform='rotate('+rand(0,360)+'deg)'
+        el.style.animation='fall '+(4+Math.random()*2)+'s linear forwards'
+        el.style.animationDelay=(Math.random()*0.2)+'s'
+        document.body.appendChild(el)
+        setTimeout(()=>el.remove(),7000)
+      }
+    }
   </script>
 </body>
 </html>
