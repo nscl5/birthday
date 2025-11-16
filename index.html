@@ -1,0 +1,96 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Happy Birthday, Fatemeh</title>
+  <style>
+    :root{--bg:#071022;--card:#081029;--accent:#7c3aed;--muted:#9fb0d6;--glass:rgba(255,255,255,.04)}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;color:#eaf6ff;background:linear-gradient(180deg,var(--bg),#031024);-webkit-font-smoothing:antialiased}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px}
+    .card{width:100%;max-width:820px;background:linear-gradient(180deg,var(--card),#041123);border-radius:14px;padding:26px;box-shadow:0 14px 40px rgba(2,6,23,.6)}
+    h1{margin:0;font-size:20px}
+    p{margin:10px 0 18px;color:var(--muted);line-height:1.45}
+    .form{display:flex;gap:8px;align-items:center}
+    input[type=text]{flex:1;padding:12px;border-radius:10px;border:1px solid var(--glass);background:rgba(255,255,255,.02);color:inherit}
+    button{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+    .error{color:#ff9aa2;margin-top:10px}
+    .message{white-space:pre-wrap;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(90deg,#061726,#071022);padding:16px;border-radius:10px;margin-top:14px}
+    .cake{font-family:monospace;white-space:pre;margin-top:12px}
+    .center{display:flex;gap:8px;align-items:center}
+    .hidden{display:none}
+    .sparkle{display:inline-block;animation:pop 900ms linear infinite}
+    @keyframes pop{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="card">
+      <h1>Hello 👋</h1>
+      <p>This is a small birthday surprise prepared by Arshia. Just type your name and open it.</p><div id="step1">
+    <form id="nameForm" class="form" onsubmit="return onSubmitName();">
+      <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
+      <button type="submit">Open</button>
+    </form>
+    <div id="err" class="error hidden">This page is not for you.</div>
+  </div>
+
+  <div id="step2" class="hidden">
+    <div class="message" id="messageBlock"></div>
+    <div class="center">
+      <button id="blowBtn">Blow out the candles</button>
+    </div>
+    <div class="cake" id="cakeBlock"></div>
+  </div>
+
+  <div id="final" class="hidden">
+    <h1 id="finalTitle"></h1>
+    <p id="finalText"></p>
+    <div class="cake" id="smallCake"></div>
+  </div>
+
+</div>
+
+  </div>  <script>
+    const MESSAGE = `Dear Fatemeh,\n\nWishing you a relaxed and joyful birthday. I hope the year ahead brings you good moments, new experiences, and people who make you smile. Enjoy your day!\n\n— Arshia`;
+    const SMALL_CAKE = `   , , ,\n  (\\|/)\n   -*-\n  (\\|/)\n   | |  ==  HAPPY BIRTHDAY ==\n  (___)`;
+    const ASCII_CAKE = `       (\` + "'" + `)\n      ( : )\n     (  :  )\n    (\` + "'" + `-:--:-'\`)\n      |     |\n      |     |\n     (_______)`;
+
+    function q(id){return document.getElementById(id)}
+    function normalize(s){return String(s||'').trim().toLowerCase()}
+
+    function onSubmitName(){
+      const name = q('nameInput').value
+      if(normalize(name) !== 'fatemeh'){
+        q('err').classList.remove('hidden')
+        return false
+      }
+      q('err').classList.add('hidden')
+      q('step1').classList.add('hidden')
+      q('step2').classList.remove('hidden')
+      q('messageBlock').textContent = MESSAGE
+      q('cakeBlock').textContent = ASCII_CAKE
+      return false
+    }
+
+    q('blowBtn').addEventListener('click', ()=>{
+      q('step2').classList.add('hidden')
+      q('final').classList.remove('hidden')
+      q('finalTitle').textContent = 'Happy Birthday, Fatemeh 🎉'
+      q('finalText').textContent = 'Hope your day is relaxed, fun, and full of small lovely moments. Best wishes from Arshia 🤍.'
+      q('smallCake').textContent = SMALL_CAKE
+      const confetti = document.createElement('div')
+      confetti.textContent = '✨' + '✨'.repeat(3)
+      confetti.className = 'sparkle'
+      q('card').appendChild(confetti)
+      setTimeout(()=>confetti.remove(),4000)
+    })
+
+    ;(function(){
+      const params = new URLSearchParams(location.search)
+      const pre = params.get('name')
+      if(pre){q('nameInput').value = pre}
+    })()
+  </script></body>
+</html>
