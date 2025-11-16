@@ -28,11 +28,12 @@
   <div class="wrap">
     <div class="card" id="card">
       <h1>Hello 👋</h1>
-      <p>This is a small birthday surprise prepared by Arshia. Just type your name and open it.</p><div id="step1">
-    <form id="nameForm" class="form" onsubmit="return onSubmitName();">
+      <p>This is your birthday surprise prepared by Arshia. Just type your first-name and open it.</p><div id="step1">
+  <div id="step1">
+    <div class="form">
       <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
-      <button type="submit">Open</button>
-    </form>
+      <button id="openBtn" type="button">Open</button>
+    </div>
     <div id="err" class="error hidden">This page is not for you.</div>
   </div>
 
@@ -60,19 +61,21 @@
     function q(id){return document.getElementById(id)}
     function normalize(s){return String(s||'').trim().toLowerCase()}
 
-    function onSubmitName(){
-      const name = q('nameInput').value
-      if(normalize(name) !== 'fatemeh'){
-        q('err').classList.remove('hidden')
-        return false
+    function q(id){ return document.getElementById(id) }
+    function normalize(s){ return String(s||'').trim().toLowerCase() }
+  
+    document.getElementById('openBtn').addEventListener('click', function (e) {
+      const name = q('nameInput').value;
+      if (normalize(name) !== 'fatemeh') {
+        q('err').classList.remove('hidden');
+        return;
       }
-      q('err').classList.add('hidden')
-      q('step1').classList.add('hidden')
-      q('step2').classList.remove('hidden')
-      q('messageBlock').textContent = MESSAGE
-      q('cakeBlock').textContent = ASCII_CAKE
-      return false
-    }
+      q('err').classList.add('hidden');
+      q('step1').classList.add('hidden');
+      q('step2').classList.remove('hidden');
+      q('messageBlock').textContent = MESSAGE;
+      q('cakeBlock').textContent = ASCII_CAKE;
+    });
 
     q('blowBtn').addEventListener('click', ()=>{
       q('step2').classList.add('hidden')
