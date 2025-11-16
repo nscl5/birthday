@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Happy Birthday, Fatemeh</title>
+  <title>Happy Birthday</title>
   <style>
     :root{--bg1:#fff7f3;--bg2:#fff6ff;--card:#ffffff;--accent:#ff6fb5;--accent2:#ffcc4d;--muted:#6b6b6b}
     html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;color:#111;background:linear-gradient(180deg,var(--bg1),var(--bg2));-webkit-font-smoothing:antialiased}
@@ -24,6 +24,7 @@
     .finalText{color:var(--muted);margin-top:8px}
     .confetti-piece{position:fixed;pointer-events:none;z-index:9999;top:-10px;opacity:0.95}
     @keyframes fall {to{transform:translateY(110vh) rotate(360deg)}}
+    @media (max-width:420px){ .card{padding:18px} input[type=text]{padding:10px} button{padding:10px 12px} }
   </style>
 </head>
 <body>
@@ -33,10 +34,10 @@
         <div class="intro">
           <div>
             <h1>Hello 👋</h1>
-            <p>This is a small birthday surprise prepared by Arshia. Just type your first-name and open it.</p>
+            <p>This is a small birthday surprise prepared by Arshia. Just type your first-name (English or Persian) and open it.</p>
             <div id="step1">
               <div class="form">
-                <input id="nameInput" name="name" type="text" placeholder="Your name" autocomplete="off" required>
+                <input id="nameInput" name="name" type="text" placeholder="Your name ..." autocomplete="off" required>
                 <button id="openBtn" type="button">Open</button>
               </div>
               <div id="err" class="error hidden">This page is not for you.</div>
@@ -63,61 +64,100 @@
   </div>
 
   <script>
-    const MESSAGE = `Dear Fatemeh,
+    const MESSAGES = {
+      fatemeh: {
+        title: 'Happy Birthday, Fatemeh 🎉',
+        message: `Dear Fatemeh,
 
 Wishing you a relaxed and joyful birthday. I hope the year ahead brings you good moments, new experiences, and people who make you smile. Enjoy your day!
 
-— Arshia`;
-    const CAKE_EMOJI = `🎂\n🕯️🕯️🕯️`;
+— Arshia`,
+        cake: '🎂\n🕯️🕯️🕯️',
+        finalCake: '🎂🎁🧁',
+        confettiColors: ['#FF6FB5','#FFD2EA','#FFCC4D','#FFD6F0']
+      },
+      mohammad: {
+        title: 'Happy Birthday, Mohammad Hassan 🎊',
+        message: `Dear Mohammad Hassan,
+
+Happy birthday! Wishing you a calm and cheerful day and a year filled with success and memorable moments. Enjoy the celebration — you deserve it.
+
+— Arshia`,
+        cake: '🍰\n🕯️🕯️',
+        finalCake: '🍰🎉🥂',
+        confettiColors: ['#7CE3B6','#9AD2FF','#C89BFF','#FFD66B']
+      }
+    };
+
+    const fatemehKeys = new Set(['fatemeh','فاطمه','fãtemeh','fatma']);
+    const mohKeys = new Set(['mohammad hassan','mohammadhassan','mohammad','mohammadhasan','mohammad hassan','mohammad hasson','mohamad','محمد حسن','محمد']);
+
+    function normalize(s){ return String(s||'').trim().toLowerCase().replace(/\u200c/g,' ').replace(/\s+/g,' ').normalize('NFKC') }
+
+    function matchName(raw){
+      const n = normalize(raw);
+      if(!n) return null;
+      if(fatemehKeys.has(n)) return 'fatemeh';
+      if(mohKeys.has(n)) return 'mohammad';
+      if(n.includes('فاطمه')) return 'fatemeh';
+      if(n.includes('fatemeh')) return 'fatemeh';
+      if(n.includes('محمد')) return 'mohammad';
+      if(n.includes('mohammad') || n.includes('moham') || n.includes('moh')) return 'mohammad';
+      return null;
+    }
+
     function q(id){ return document.getElementById(id) }
-    function normalize(s){ return String(s||'').trim().toLowerCase() }
 
     document.getElementById('openBtn').addEventListener('click', function () {
-      const name = q('nameInput').value;
-      if (normalize(name) !== 'fatemeh') {
+      const raw = q('nameInput').value;
+      const matched = matchName(raw);
+      if(!matched){
         q('err').classList.remove('hidden');
         return;
       }
       q('err').classList.add('hidden');
       q('intro').classList.add('hidden');
       q('step2').classList.remove('hidden');
-      q('messageBlock').textContent = MESSAGE;
-      q('cakeBlock').textContent = CAKE_EMOJI;
+      const data = MESSAGES[matched];
+      q('messageBlock').textContent = data.message;
+      q('cakeBlock').textContent = data.cake;
+      q('openBtn').disabled = true;
+      q('openBtn').dataset.matched = matched;
     });
 
     q('blowBtn').addEventListener('click', ()=>{
       q('step2').classList.add('hidden');
       q('final').classList.remove('hidden');
-      q('finalTitle').textContent = 'Happy Birthday, Fatemeh 🎉';
-      q('finalText').textContent = 'Hope your day is relaxed, fun, and full of small lovely moments. Best wishes from Arshia 🤍.';
-      q('smallCake').textContent = '🎂🎁🧁';
-      launchConfetti();
+      const matched = q('openBtn').dataset.matched || matchName(q('nameInput').value) || 'fatemeh';
+      const data = MESSAGES[matched];
+      q('finalTitle').textContent = data.title;
+      q('finalText').textContent = data.message.replace(/\n—.*/s,'').trim();
+      q('smallCake').textContent = data.finalCake;
+      launchConfetti(data.confettiColors);
     });
 
     (function(){
       const params = new URLSearchParams(location.search);
       const pre = params.get('name');
-      if(pre){
-        q('nameInput').value = pre;
-      }
+      if(pre){ q('nameInput').value = pre; }
     })();
 
     function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
-    function launchConfetti(){
-      const colors = ['#FF6FB5','#FFD66B','#7CE3B6','#9AD2FF','#C89BFF']
+    function launchConfetti(colors){
+      const palette = colors && colors.length? colors : ['#FF6FB5','#FFD66B','#7CE3B6','#9AD2FF','#C89BFF'];
       for(let i=0;i<40;i++){
-        const el=document.createElement('div')
-        el.className='confetti-piece'
-        el.style.left=rand(5,95)+'vw'
-        el.style.background=colors[rand(0,colors.length-1)]
-        el.style.width=rand(6,12)+'px'
-        el.style.height=rand(10,18)+'px'
-        el.style.borderRadius=rand(0,50)+'%'
-        el.style.transform='rotate('+rand(0,360)+'deg)'
-        el.style.animation='fall '+(4+Math.random()*2)+'s linear forwards'
-        el.style.animationDelay=(Math.random()*0.2)+'s'
-        document.body.appendChild(el)
-        setTimeout(()=>el.remove(),7000)
+        const el=document.createElement('div');
+        el.className='confetti-piece';
+        el.style.left=rand(5,95)+'vw';
+        el.style.background=palette[rand(0,palette.length-1)];
+        el.style.width=rand(6,12)+'px';
+        el.style.height=rand(10,18)+'px';
+        el.style.borderRadius=rand(0,50)+'%';
+        el.style.transform='rotate('+rand(0,360)+'deg)';
+        el.style.animation='fall '+(4+Math.random()*2)+'s linear forwards';
+        el.style.animationDelay=(Math.random()*0.2)+'s';
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),7000);
       }
     }
   </script>
